@@ -4,3 +4,6 @@
 [submodule "external/glew-cmake"]
 	path = external/glew-cmake
 	url = https://github.com/Perlmint/glew-cmake
+[submodule "external/cglm"]
+	path = external/cglm
+	url = https://github.com/recp/cglm
