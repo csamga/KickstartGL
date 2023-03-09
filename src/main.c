@@ -1,12 +1,11 @@
-#include <GL/gl.h>
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+
 #include <stdio.h>
 #include <stdlib.h>
-#include <GLFW/glfw3.h>
 
 int main(void)
 {
-	printf("hi\n");
-
 	GLFWwindow *window;
 
 	if (!glfwInit()) {
@@ -18,8 +17,17 @@ int main(void)
 		glfwTerminate();
 		return EXIT_FAILURE;
 	}
+	printf("Using GLFW %s\n", glfwGetVersionString());
 
 	glfwMakeContextCurrent(window);
+
+	GLenum error = glewInit();
+	if (error != GLEW_OK) {
+		glfwTerminate();
+		fprintf(stderr, "%s", glewGetErrorString(error));
+		return EXIT_FAILURE;
+	}
+	printf("Using GLEW %s\n", glewGetString(GLEW_VERSION));
 
 	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 

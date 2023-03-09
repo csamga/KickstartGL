@@ -3,6 +3,8 @@
     "arguments": [
       "/usr/bin/gcc",
       "-Iexternal/glfw/include",
+      "-Iexternal/glew-cmake/include",
+      "-DGLEW_NO_GLU",
       "-Wall",
       "-Wextra",
       "-Wpedantic",
