@@ -12,15 +12,20 @@ GLFW_BUILD_DIR = $(GLFW_DIR)/build
 GLFW_LIB_DIR = $(GLFW_BUILD_DIR)/src
 GLFW = $(GLFW_LIB_DIR)/libglfw3.a
 
+GLEW_DIR = external/glew-cmake
+GLEW_LIB_DIR = $(GLEW_DIR)/lib
+GLEW = $(GLEW_LIB_DIR)/libGLEW.a
+
 GLFW_INCLUDE_DIR = $(GLFW_DIR)/include
-INCLUDES = -I$(GLFW_INCLUDE_DIR)
+GLEW_INCLUDE_DIR = $(GLEW_DIR)/include
+INCLUDES = -I$(GLFW_INCLUDE_DIR) -I$(GLEW_INCLUDE_DIR)
 
 CC = gcc
 CPPFLAGS = $(INCLUDES)
 CFLAGS = -Wall -Wextra -Wpedantic
 
-LDFLAGS = -L$(GLFW_BUILD_DIR)/src
-LDLIBS += -lglfw3
+LDFLAGS = -L$(GLFW_BUILD_DIR)/src -L$(GLEW_LIB_DIR)
+LDLIBS += -lglfw3 -lGLEW
 
 ifeq ($(OS),Windows_NT)
 	OS = windows
@@ -42,7 +47,7 @@ endif
 all: $(EXEC)
 .PHONY: all
 
-$(EXEC): $(OBJS) $(GLFW)
+$(EXEC): $(OBJS) $(GLFW) $(GLEW)
 	@echo "$(GREEN)Linking $^ for $@$(RESET)"
 	mkdir -p $(@D)
 	$(CC) $(CPPFLAGS) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LDLIBS)
@@ -60,10 +65,17 @@ $(GLFW):
 		-D GLFW_BUILD_DOCS=OFF \
 		-D GLFW_BUILD_TESTS=OFF \
 		-G "Unix Makefiles"
-	cd $(GLFW_BUILD_DIR) && $(MAKE)
+	$(MAKE) --directory=$(GLFW_BUILD_DIR)
+
+$(GLEW):
+	@echo "$(GREEN)Building GLEW$(RESET)"
+	$(MAKE) glew.lib.static --directory=$(GLEW_DIR)
 
 glfw: $(GLFW)
 .PHONY: glfw
+
+glew: $(GLEW)
+.PHONY: glew
 
 run: $(EXEC)
 	@echo "$(GREEN)Running $<$(RESET)"
@@ -75,6 +87,15 @@ clean:
 	$(RM) -rf $(BIN_PREFIX)
 	$(RM) -rf $(BUILD_PREFIX)
 .PHONY: clean
+
+clean.glfw:
+	@echo "$(GREEN)Cleaning GLFW$(RESET)"
+	$(MAKE) clean --directory=$(GLFW_BUILD_DIR)
+.PHONY: clean.glfw
+
+clean.glew:
+	@echo "$(GREEN)Cleaning GLEW$(RESET)"
+	$(MAKE) clean --directory=$(GLEW_DIR)
 
 print-vars:
 	@echo $(OS)
