@@ -1,3 +1,4 @@
+#include <GL/gl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <GLFW/glfw3.h>
@@ -19,6 +20,8 @@ int main(void)
 	}
 
 	glfwMakeContextCurrent(window);
+
+	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
 	while (!glfwWindowShouldClose(window)) {
 		glClear(GL_COLOR_BUFFER_BIT);
