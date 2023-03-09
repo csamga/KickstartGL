@@ -20,20 +20,22 @@ CPPFLAGS = $(INCLUDES)
 CFLAGS = -Wall -Wextra -Wpedantic
 
 LDFLAGS = -L$(GLFW_BUILD_DIR)/src
-LDLIBS = -lglfw3
+LDLIBS += -lglfw3
 
 ifeq ($(OS),Windows_NT)
 	OS = windows
 else
-	UNAME = uname
+	UNAME = $(shell uname -s)
 	ifeq ($(UNAME),Linux)
 		OS = linux
+	else
+		@echo "$(RED)Platform not supported$(RESET)"
 	endif
 endif
 
-ifeq ($(OS), windows)
+ifeq ($(OS),windows)
 	LDLIBS += -lopengl32 -lgdi32
-else ifeq ($(OS), linux)
+else ifeq ($(OS),linux)
 	LDLIBS += -lGL -lm
 endif
 
@@ -74,5 +76,10 @@ clean:
 	$(RM) -rf $(BUILD_PREFIX)
 .PHONY: clean
 
+print-vars:
+	@echo $(OS)
+	@echo $(LDLIBS)
+
+RED = \033[1;91m
 GREEN = \033[1;92m
 RESET = \033[0m
