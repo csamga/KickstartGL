@@ -113,10 +113,15 @@ clean.glfw:
 clean.glew:
 	@echo "$(GREEN)Cleaning GLEW$(RESET)"
 	$(MAKE) clean --directory=$(GLEW_DIR)
+.PHONY: clean.glew
 
 clean.cglm:
 	@echo "$(GREEN)Cleaning CGLM$(RESET)"
 	$(MAKE) clean --directory=$(CGLM_BUILD_DIR)
+.PHONY: clean.cglm
+
+clean.libs: clean.glfw clean.glew clean.cglm
+.PHONY: clean.libs
 
 print-vars:
 	@echo $(OS)
