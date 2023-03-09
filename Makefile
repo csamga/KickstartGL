@@ -20,11 +20,10 @@ GLEW_INCLUDE_DIR = $(GLEW_DIR)/include
 INCLUDES = -I$(GLFW_INCLUDE_DIR) -I$(GLEW_INCLUDE_DIR)
 
 CC = gcc
-CPPFLAGS = $(INCLUDES) -DGLEW_NO_GLU
+CPPFLAGS = $(INCLUDES) -DGLEW_STATIC -DGLEW_NO_GLU
 CFLAGS = -Wall -Wextra -Wpedantic
 
 LDFLAGS = -L$(GLFW_BUILD_DIR)/src -L$(GLEW_LIB_DIR)
-LDLIBS += -lglfw3
 
 ifeq ($(OS),Windows_NT)
 	OS = windows
@@ -38,10 +37,10 @@ else
 endif
 
 ifeq ($(OS),windows)
-	LDLIBS += -lglew32 -lopengl32 -lgdi32
+	LDLIBS := -lglew32 -lglfw3 -lopengl32 -lgdi32
 	GLEW := $(GLEW_LIB_DIR)/libglew32.a
 else ifeq ($(OS),linux)
-	LDLIBS += -lGLEW -lGL -lm
+	LDLIBS := -lGLEW -lglfw3 -lGL -lm
 	GLEW := $(GLEW_LIB_DIR)/libGLEW.a
 endif
 
