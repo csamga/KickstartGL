@@ -20,7 +20,22 @@ CPPFLAGS = $(INCLUDES)
 CFLAGS = -Wall -Wextra -Wpedantic
 
 LDFLAGS = -L$(GLFW_BUILD_DIR)/src
-LDLIBS = -lGL -lglfw3 -lm
+LDLIBS = -lglfw3
+
+ifeq ($(OS),Windows_NT)
+	OS = windows
+else
+	UNAME = uname
+	ifeq ($(UNAME),Linux)
+		OS = linux
+	endif
+endif
+
+ifeq ($(OS), windows)
+	LDLIBS += -lopengl32 -lgdi32
+else ifeq ($(OS), linux)
+	LDLIBS += -lGL -lm
+endif
 
 all: $(EXEC)
 .PHONY: all
@@ -35,7 +50,6 @@ $(BUILD_PREFIX)/%.o: $(SRC_PREFIX)/%.c
 	mkdir -p $(@D)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
 
-glfw: $(GLFW)
 $(GLFW):
 	@echo "$(GREEN)Building GLFW$(RESET)"
 	mkdir -p $(@D)
@@ -45,6 +59,9 @@ $(GLFW):
 		-D GLFW_BUILD_TESTS=OFF \
 		-G "Unix Makefiles"
 	cd $(GLFW_BUILD_DIR) && $(MAKE)
+
+glfw: $(GLFW)
+.PHONY: glfw
 
 run: $(EXEC)
 	@echo "$(GREEN)Running $<$(RESET)"
