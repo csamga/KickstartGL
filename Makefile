@@ -40,9 +40,10 @@ $(GLFW):
 	@echo "$(GREEN)Building GLFW$(RESET)"
 	mkdir -p $(@D)
 	cmake -S $(GLFW_DIR) -B $(GLFW_BUILD_DIR) \
-		-D GLFW_BUILD_EXAMPLES=0FF \
+		-D GLFW_BUILD_EXAMPLES=OFF \
 		-D GLFW_BUILD_DOCS=OFF \
-		-D GLFW_BUILD_TESTS=OFF
+		-D GLFW_BUILD_TESTS=OFF \
+		-G "Unix Makefiles"
 	cd $(GLFW_BUILD_DIR) && $(MAKE)
 
 run: $(EXEC)
