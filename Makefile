@@ -14,7 +14,6 @@ GLFW = $(GLFW_LIB_DIR)/libglfw3.a
 
 GLEW_DIR = external/glew-cmake
 GLEW_LIB_DIR = $(GLEW_DIR)/lib
-GLEW = $(GLEW_LIB_DIR)/libGLEW.a
 
 GLFW_INCLUDE_DIR = $(GLFW_DIR)/include
 GLEW_INCLUDE_DIR = $(GLEW_DIR)/include
@@ -25,7 +24,7 @@ CPPFLAGS = $(INCLUDES)
 CFLAGS = -Wall -Wextra -Wpedantic
 
 LDFLAGS = -L$(GLFW_BUILD_DIR)/src -L$(GLEW_LIB_DIR)
-LDLIBS += -lglfw3 -lGLEW
+LDLIBS += -lglfw3
 
 ifeq ($(OS),Windows_NT)
 	OS = windows
@@ -39,9 +38,11 @@ else
 endif
 
 ifeq ($(OS),windows)
-	LDLIBS += -lopengl32 -lgdi32
+	LDLIBS += -lglew32 -lopengl32 -lgdi32
+	GLEW := $(GLEW_LIB_DIR)/libglew32.a
 else ifeq ($(OS),linux)
-	LDLIBS += -lGL -lm
+	LDLIBS += -lGLEW -lGL -lm
+	GLEW := $(GLEW_LIB_DIR)/libGLEW.a
 endif
 
 all: $(EXEC)
