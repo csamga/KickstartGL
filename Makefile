@@ -25,7 +25,7 @@ LDLIBS += -lglfw3
 ifeq ($(OS),Windows_NT)
 	OS = windows
 else
-	UNAME = $(shell uname -s)
+	UNAME := $(shell uname -s)
 	ifeq ($(UNAME),Linux)
 		OS = linux
 	else
